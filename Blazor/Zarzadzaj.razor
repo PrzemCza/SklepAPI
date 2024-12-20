@@ -1,0 +1,55 @@
+﻿
+@page "/zarzadzaj"
+@using SklepAPI.Models
+@inject HttpClient Http
+
+<h1>Zarządzaj produktami</h1>
+
+<EditForm Model="nowyProdukt" OnValidSubmit="DodajProdukt">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nazwa:</label>
+        <InputText @bind-Value="nowyProdukt.Nazwa" required />
+    </div>
+    <div>
+        <label>Marka:</label>
+        <InputText @bind-Value="nowyProdukt.Marka" required />
+    </div>
+    <div>
+        <label>Rozmiar:</label>
+        <InputNumber @bind-Value="nowyProdukt.Rozmiar" required />
+    </div>
+    <div>
+        <label>Kolor:</label>
+        <InputText @bind-Value="nowyProdukt.Kolor" required />
+    </div>
+    <div>
+        <label>Cena:</label>
+        <InputNumber @bind-Value="nowyProdukt.Cena" required />
+    </div>
+    <button type="submit">Dodaj</button>
+</EditForm>
+
+@if (isSuccess)
+{
+    <p>Produkt dodany pomyślnie!</p>
+}
+
+@code    
+{
+    
+    private Produkt nowyProdukt = new Produkt();
+    private bool isSuccess = false;
+
+    private async Task DodajProdukt()
+    {
+        var response = await Http.PostAsJsonAsync("api/produkty", nowyProdukt);
+        if (response.IsSuccessStatusCode)
+        {
+            isSuccess = true;
+            nowyProdukt = new Produkt(); // Reset form
+        }
+    }
+}

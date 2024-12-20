@@ -1,0 +1,46 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<h1>Lista produktów</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Marka</th>
+            <th>Rozmiar</th>
+            <th>Kolor</th>
+            <th>Cena</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (produkty != null && produkty.Length > 0)
+        {
+            foreach (var produkt in produkty)
+            {
+                <tr>
+                    <td>@produkt.Nazwa</td>
+                    <td>@produkt.Marka</td>
+                    <td>@produkt.Rozmiar</td>
+                    <td>@produkt.Kolor</td>
+                    <td>@produkt.Cena zł</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">Brak produktów do wyświetlenia.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private Produkt[] produkty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        produkty = await Http.GetFromJsonAsync<Produkt[]>("api/produkty");
+    }
+}
